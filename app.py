@@ -33,3 +33,7 @@ class app:
                 break
             else:
                 print("Opción no válida. Por favor, intente nuevamente.")
+
+        def main():
+            app_instance = app()
+            app_instance.app_menu()

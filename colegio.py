@@ -2,6 +2,8 @@ class colegio:
     def __init__(self, nombre):
         self.nombre = nombre
         self.alumnos = []
+    def __str__(self):
+        return f"Colegio: {self.nombre}, Alumnos: {len(self.alumnos)}"
 
     def agregar_alumno(self, alumno):
         self.alumnos.append(alumno)
