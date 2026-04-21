@@ -9,6 +9,7 @@ import pytest
 from aplicacion.servicio_gestion_escolar import ServicioGestionEscolar
 from dominio.fabricas import FabricaAlumnos, FabricaColegios
 from infraestructura.repositorio_txt import RepositorioTXT
+from presentacion.consola import ConsolaTaller6
 
 
 @pytest.fixture
@@ -144,3 +145,134 @@ def test_factorias_rechazan_tipos_no_soportados() -> None:
     with pytest.raises(ValueError, match="Perfil de alumno no soportado"):
         FabricaAlumnos.crear("MONITOR", "ALU-001", "Luisa", 15, "10A")
 
+
+def test_servicio_genera_identificadores_ignorando_formatos_invalidos() -> None:
+    """Verifica la generación robusta de identificadores consecutivos."""
+    assert (
+        ServicioGestionEscolar._siguiente_identificador(
+            "ALU",
+            ["ALU-XYZ", "OTRO-001", "ALU-002"],
+        )
+        == "ALU-003"
+    )
+
+
+def test_consola_inicializar_sin_datos_informa_sesion_nueva(
+    servicio: ServicioGestionEscolar,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Cubre la inicialización cuando no existe archivo persistido."""
+    consola = ConsolaTaller6(servicio)
+
+    consola.inicializar()
+
+    salida = capsys.readouterr().out
+    assert "No se encontraron datos previos" in salida
+
+
+def test_consola_inicializar_con_datos_carga_archivo(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Cubre la inicialización cuando sí existen datos persistidos."""
+    repositorio = RepositorioTXT(tmp_path / "taller6.txt")
+    servicio = ServicioGestionEscolar(repositorio)
+    colegio = servicio.registrar_colegio("Colegio Guardado", "PUBLICO")
+    servicio.registrar_alumno(colegio.identificador, "Ana", 14, "8A", "REGULAR")
+    servicio.guardar_datos()
+
+    consola = ConsolaTaller6(ServicioGestionEscolar(repositorio))
+    consola.inicializar()
+
+    salida = capsys.readouterr().out
+    assert "Se cargaron los datos guardados" in salida
+
+
+def test_consola_muestra_mensajes_cuando_no_hay_datos(
+    servicio: ServicioGestionEscolar,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Cubre los estados vacíos de la consola."""
+    consola = ConsolaTaller6(servicio)
+
+    consola._registrar_alumno()
+    consola._mostrar_colegios()
+    consola._mostrar_alumnos_por_colegio()
+    consola._mostrar_resumen_matriculas()
+
+    salida = capsys.readouterr().out
+    assert "Debe registrar al menos un colegio" in salida
+    assert "No hay colegios registrados" in salida
+    assert "No existen matrículas para mostrar" in salida
+
+
+def test_consola_muestra_mensaje_si_colegio_no_tiene_alumnos(
+    servicio: ServicioGestionEscolar,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Cubre la consulta de un colegio sin alumnos asociados."""
+    colegio = servicio.registrar_colegio("Colegio Sin Alumnos", "PUBLICO")
+    consola = ConsolaTaller6(servicio)
+    monkeypatch.setattr("builtins.input", lambda _: colegio.identificador)
+
+    consola._mostrar_alumnos_por_colegio()
+
+    salida = capsys.readouterr().out
+    assert "todavía no tiene alumnos registrados" in salida
+
+
+def test_consola_ejecuta_flujo_principal(
+    servicio: ServicioGestionEscolar,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Ejecuta un flujo completo del menú principal."""
+    consola = ConsolaTaller6(servicio)
+    entradas = iter(
+        [
+            "1",
+            "Colegio Integral",
+            "1",
+            "2",
+            "COL-001",
+            "Laura",
+            "15",
+            "10A",
+            "2",
+            "3",
+            "4",
+            "COL-001",
+            "5",
+            "6",
+            "7",
+            "9",
+            "8",
+        ]
+    )
+    monkeypatch.setattr("builtins.input", lambda _: next(entradas))
+
+    consola.ejecutar()
+
+    salida = capsys.readouterr().out
+    assert "Colegio registrado correctamente" in salida
+    assert "Alumno registrado correctamente" in salida
+    assert "Resumen de matrículas" in salida
+    assert "Los datos fueron guardados correctamente" in salida
+    assert "La opción seleccionada no es válida" in salida
+    assert "Saliendo de la aplicación." in salida
+
+
+def test_validaciones_estaticas_de_consola(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Cubre validaciones de menú y lectura numérica."""
+    with pytest.raises(ValueError, match="Debe seleccionar 1 para público"):
+        ConsolaTaller6._mapear_tipo_colegio("5")
+
+    with pytest.raises(ValueError, match="Debe seleccionar 1 para regular"):
+        ConsolaTaller6._mapear_perfil_alumno("8")
+
+    monkeypatch.setattr("builtins.input", lambda _: "-2")
+    with pytest.raises(ValueError, match="número entero positivo"):
+        ConsolaTaller6._leer_entero_positivo("Edad: ")
