@@ -1,4 +1,5 @@
 import colegio
+import tipo_colegio
 
 
 class app:
@@ -27,6 +28,11 @@ class app:
                 nuevo_colegio = colegio(nombre_colegio)
                 self.agregar_colegio(nuevo_colegio)
                 print(f"Colegio '{nombre_colegio}' agregado.")
+                tipo_colegio_eleccion =input("Seleccione 1 si el colegio es privado o 2 si el colegio es público")
+                if tipo_colegio_eleccion =="1":
+                    colegio.tipo = tipo_colegio.col_privado.gestion()
+                elif tipo_colegio_eleccion =="2":
+                    colegio.tipo = tipo_colegio.col_publico.gestion()
             elif opcion == "2":
                 self.mostrar_colegios()
             elif opcion == "3":
