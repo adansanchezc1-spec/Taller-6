@@ -1,7 +1,9 @@
 class colegio:
-    def __init__(self, nombre):
+    def __init__(self, nombre,tipo):
         self.nombre = nombre
         self.alumnos = []
+        self.tipo =tipo 
+
     def __str__(self):
         return f"Colegio: {self.nombre}, Alumnos: {len(self.alumnos)}"
 
