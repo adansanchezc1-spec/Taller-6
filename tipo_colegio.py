@@ -1,7 +1,8 @@
-import colegio
-class col_privado(colegio):
-    def gestion(self):
-        return "Privado"
-class col_publico(colegio):
-    def gestion(self):
-        return "Publico"
+"""Alias de compatibilidad para tipos de colegio."""
+
+from dominio.modelos.colegio import ColegioPrivado, ColegioPublico
+
+col_privado = ColegioPrivado
+col_publico = ColegioPublico
+
+__all__ = ["ColegioPrivado", "ColegioPublico", "col_privado", "col_publico"]

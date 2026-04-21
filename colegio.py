@@ -1,17 +1,5 @@
-class colegio:
-    def __init__(self, nombre,tipo):
-        self.nombre = nombre
-        self.alumnos = []
-        self.tipo =tipo 
+"""Compatibilidad con la jerarquía de colegios del nuevo diseño."""
 
-    def __str__(self):
-        return f"Colegio: {self.nombre}, Alumnos: {len(self.alumnos)}"
+from dominio.modelos.colegio import Colegio, ColegioPrivado, ColegioPublico
 
-    def agregar_alumno(self, alumno):
-        self.alumnos.append(alumno)
-
-    def mostrar_alumnos(self):
-        print(f"Alumnos en el colegio {self.nombre}:")
-        for alumno in self.alumnos:
-            print(f"- {alumno.nombre}, Edad: {alumno.edad}")
-            
+__all__ = ["Colegio", "ColegioPrivado", "ColegioPublico"]
