@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 from pathlib import Path
+import sys
+
+RAIZ_PROYECTO = Path(__file__).resolve().parents[1]
+if str(RAIZ_PROYECTO) not in sys.path:
+    sys.path.insert(0, str(RAIZ_PROYECTO))
 
 import pytest
-import aplicacion.servicio_gestion_escolar
 
 from aplicacion.servicio_gestion_escolar import ServicioGestionEscolar
 from dominio.fabricas import FabricaAlumnos, FabricaColegios
