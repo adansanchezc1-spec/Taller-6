@@ -5,6 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+import pytest_mock
+import aplicacion.servicio_gestion_escolar
 
 from aplicacion.servicio_gestion_escolar import ServicioGestionEscolar
 from dominio.fabricas import FabricaAlumnos, FabricaColegios
