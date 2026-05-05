@@ -10,17 +10,17 @@ from dataclasses import dataclass
 class Alumno(ABC):
     """Representa el comportamiento común de un alumno."""
 
-    identificador: str
-    nombre: str
-    edad: int
-    grado: str
-    colegio_id: str | None = None
+    _identificador: str
+    _nombre: str
+    _edad: int
+    _grado: str
+    _colegio_id: str | None = None
 
     def __post_init__(self) -> None:
-        self._validar_cadenas(self.identificador, "El identificador del alumno")
-        self._validar_cadenas(self.nombre, "El nombre del alumno")
-        self._validar_cadenas(self.grado, "El grado del alumno")
-        if self.edad <= 0:
+        self._validar_cadenas(self._identificador, "El identificador del alumno")
+        self._validar_cadenas(self._nombre, "El nombre del alumno")
+        self._validar_cadenas(self._grado, "El grado del alumno")
+        if self._edad <= 0:
             raise ValueError("La edad del alumno debe ser un número positivo.")
 
     @staticmethod
@@ -29,6 +29,16 @@ class Alumno(ABC):
             raise ValueError(f"{campo} es obligatorio.")
         if "|" in valor:
             raise ValueError(f"{campo} no puede contener el carácter '|'.")
+
+    @property
+    def edad(self) -> int:
+        return self._edad
+
+    @edad.setter
+    def edad(self, valor: int) -> None:
+        if valor <= 0:
+            raise ValueError("La edad del alumno debe ser un número positivo.")
+        self._edad = valor
 
     @abstractmethod
     def perfil(self) -> str:
@@ -45,10 +55,10 @@ class Alumno(ABC):
 
     def serializar(self) -> str:
         """Convierte el alumno a una línea del archivo TXT."""
-        colegio_id = self.colegio_id or ""
+        colegio_id = self._colegio_id or ""
         return (
-            f"{self.perfil().upper()}|{self.identificador}|{colegio_id}|"
-            f"{self.nombre}|{self.edad}|{self.grado}"
+            f"{self.perfil().upper()}|{self._identificador}|{colegio_id}|"
+            f"{self._nombre}|{self._edad}|{self._grado}"
         )
 
     def descripcion(self, valor_base: int) -> str:
@@ -56,10 +66,40 @@ class Alumno(ABC):
         valor_final = self.calcular_valor_matricula(valor_base)
         descuento = int(self.porcentaje_descuento() * 100)
         return (
-            f"{self.identificador} - {self.nombre} | Grado: {self.grado} | "
+            f"{self._identificador} - {self._nombre} | Grado: {self._grado} | "
             f"Perfil: {self.perfil()} | Descuento: {descuento}% | "
             f"Matrícula final: ${valor_final}"
         )
+
+    @property
+    def identificador(self) -> str:
+        """Acceso de lectura al identificador del alumno."""
+        return self._identificador
+
+    @property
+    def nombre(self) -> str:
+        """Acceso de lectura al nombre del alumno."""
+        return self._nombre
+
+    @property
+    def edad(self) -> int:
+        """Acceso de lectura a la edad del alumno."""
+        return self._edad
+
+    @property
+    def grado(self) -> str:
+        """Acceso de lectura al grado del alumno."""
+        return self._grado
+
+    @property
+    def colegio_id(self) -> str | None:
+        """Acceso de lectura al identificador del colegio."""
+        return self._colegio_id
+
+    @colegio_id.setter
+    def colegio_id(self, valor: str | None) -> None:
+        """Permite establecer el identificador del colegio."""
+        self._colegio_id = valor
 
 
 @dataclass(slots=True)

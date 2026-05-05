@@ -20,7 +20,7 @@ class FabricaColegios:
         clase = cls._tipos.get(tipo_normalizado)
         if clase is None:
             raise ValueError(f"Tipo de colegio no soportado: {tipo}.")
-        return clase(identificador=identificador, nombre=nombre)
+        return clase(_identificador=identificador, _nombre=nombre)
 
 
 class FabricaAlumnos:
@@ -46,10 +46,10 @@ class FabricaAlumnos:
         if clase is None:
             raise ValueError(f"Perfil de alumno no soportado: {perfil}.")
         return clase(
-            identificador=identificador,
-            nombre=nombre,
-            edad=edad,
-            grado=grado,
-            colegio_id=colegio_id,
+            _identificador=identificador,
+            _nombre=nombre,
+            _edad=edad,
+            _grado=grado,
+            _colegio_id=colegio_id,
         )
 

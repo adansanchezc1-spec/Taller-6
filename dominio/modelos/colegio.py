@@ -12,13 +12,13 @@ from dominio.modelos.alumno import Alumno
 class Colegio(ABC):
     """Representa el comportamiento común de un colegio."""
 
-    identificador: str
-    nombre: str
+    _identificador: str
+    _nombre: str
     alumnos: list[Alumno] = field(default_factory=list)
 
     def __post_init__(self) -> None:
-        self._validar_cadenas(self.identificador, "El identificador del colegio")
-        self._validar_cadenas(self.nombre, "El nombre del colegio")
+        self._validar_cadenas(self._identificador, "El identificador del colegio")
+        self._validar_cadenas(self._nombre, "El nombre del colegio")
 
     @staticmethod
     def _validar_cadenas(valor: str, campo: str) -> None:
@@ -37,7 +37,7 @@ class Colegio(ABC):
 
     def agregar_alumno(self, alumno: Alumno) -> None:
         """Asocia un alumno con el colegio."""
-        alumno.colegio_id = self.identificador
+        alumno.colegio_id = self._identificador
         self.alumnos.append(alumno)
 
     def calcular_matricula(self, alumno: Alumno) -> int:
@@ -46,14 +46,24 @@ class Colegio(ABC):
 
     def serializar(self) -> str:
         """Convierte el colegio a una línea del archivo TXT."""
-        return f"{self.tipo().upper()}|{self.identificador}|{self.nombre}"
+        return f"{self.tipo().upper()}|{self._identificador}|{self._nombre}"
 
     def resumen(self) -> str:
         """Retorna un resumen legible del colegio."""
         return (
-            f"{self.identificador} - {self.nombre} | "
+            f"{self._identificador} - {self._nombre} | "
             f"Tipo: {self.tipo()} | Alumnos: {len(self.alumnos)}"
         )
+
+    @property
+    def identificador(self) -> str:
+        """Acceso de lectura al identificador del colegio."""
+        return self._identificador
+
+    @property
+    def nombre(self) -> str:
+        """Acceso de lectura al nombre del colegio."""
+        return self._nombre
 
 
 @dataclass(slots=True)
