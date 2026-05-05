@@ -1,0 +1,4 @@
+[COLEGIOS]
+PUBLICO|COL-001|Manuel Aya
+
+[ALUMNOS]
