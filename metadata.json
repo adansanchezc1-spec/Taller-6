@@ -1,0 +1,92 @@
+{
+  "project": "Taller 6 - Gestion Escolar con POO",
+  "version": "1.0.0",
+  "description": "Aplicacion de consola en Python que evidencia herencia, polimorfismo, modularidad y manejo de archivos TXT para la gestion de colegios y alumnos.",
+  "pdco_phase": "OPERATIONS",
+  "active_skill": "05-maintenance",
+  "sdlc_stage": "maintenance",
+  "last_updated": "2026-04-21",
+  "team": {
+    "lead": "Codex",
+    "members": [
+      "Usuario"
+    ]
+  },
+  "standards": {
+    "code_style_python": "PEP8",
+    "code_style_java": "Google Java Style",
+    "architecture": "Layered",
+    "testing_coverage_min": "80%",
+    "documentation": "Markdown + JSON"
+  },
+  "artifacts": {
+    "01-requirements": {
+      "status": "complete",
+      "files": [
+        "docs/01-requirements/requirements.md",
+        "docs/01-requirements/use-cases.md",
+        "docs/01-requirements/entity-map.md",
+        "docs/01-requirements/diagrams/use-case-diagram.md",
+        "docs/01-requirements/diagrams/activity-diagram.md"
+      ]
+    },
+    "02-architecture": {
+      "status": "complete",
+      "files": [
+        "docs/02-architecture/architecture.md",
+        "docs/02-architecture/patterns.md",
+        "docs/02-architecture/diagrams/class-diagram.md",
+        "docs/02-architecture/diagrams/sequence-diagram.md",
+        "docs/02-architecture/adr/adr-001-layered-architecture.md"
+      ]
+    },
+    "03-development": {
+      "status": "complete",
+      "files": [
+        "docs/03-development/dev-log.md",
+        "docs/03-development/api-docs.md"
+      ]
+    },
+    "04-testing": {
+      "status": "complete",
+      "files": [
+        "docs/04-testing/test-plan.md",
+        "docs/04-testing/test-results.md"
+      ]
+    },
+    "05-maintenance": {
+      "status": "complete",
+      "files": [
+        "docs/05-maintenance/changelog.md",
+        "docs/05-maintenance/refactoring-log.md",
+        "docs/05-maintenance/technical-debt.md"
+      ]
+    }
+  },
+  "metrics": {
+    "test_coverage": "97% lineas / 92% ramas",
+    "cyclomatic_complexity_avg": null,
+    "technical_debt_days": 0.25,
+    "open_bugs": 0,
+    "requirements_implemented": "6/6"
+  },
+  "patterns_applied": [
+    "Layered Architecture",
+    "Repository",
+    "Factory Method",
+    "GRASP Controller",
+    "GRASP Creator",
+    "GRASP Polymorphism"
+  ],
+  "antipatterns_detected": [
+    "Herencia incorrecta sobre modulo en tipo_colegio.py original",
+    "Acoplamiento fuerte entre consola y logica de negocio",
+    "Ausencia de persistencia real",
+    "Nombres y estructura no alineados con PEP 8"
+  ],
+  "solid_violations": [
+    "Violacion SRP en el diseno original de app.py",
+    "Violacion DIP por dependencia directa de implementaciones",
+    "Ausencia de OCP al no permitir extension limpia por subtipos"
+  ]
+}
